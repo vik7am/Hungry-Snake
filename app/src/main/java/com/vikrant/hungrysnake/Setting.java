@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,7 +18,9 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class Setting extends Activity{
+import androidx.appcompat.app.AppCompatActivity;
+
+public class Setting extends AppCompatActivity{
 
 
     ListView listView;
@@ -30,6 +34,12 @@ public class Setting extends Activity{
         myAdapter=new MyAdapter(this);
         listView.setAdapter(myAdapter);
         listView.setOnItemClickListener(myAdapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.setting, menu);
+        return true;
     }
 
     class MyAdapter extends BaseAdapter implements AdapterView.OnItemClickListener, android.content.DialogInterface.OnClickListener, SeekBar.OnSeekBarChangeListener
@@ -75,7 +85,7 @@ public class Setting extends Activity{
         public View getView(int position, View convertView, ViewGroup parent) {
             if(convertView==null)
             {
-                convertView= LayoutInflater.from(context).inflate(R.layout.row, parent,false);
+                convertView= LayoutInflater.from(context).inflate(R.layout.setting_row, parent,false);
             }
             ((TextView)convertView.findViewById(R.id.textView1)).setText(label[position]);
             ((TextView)convertView.findViewById(R.id.textView2)).setText(getData(position,convertView));
@@ -97,9 +107,12 @@ public class Setting extends Activity{
                 case 1: return ""+color[gameData.DEFAULT_COLOR];
                 case 2: return ""+gameData.SIZE;
                 case 3: return ""+gameData.SPEED;
-                case 4: ((TextView)v.findViewById(R.id.textView2)).setBackgroundColor(gameData.HRGB); break;
-                case 5: ((TextView)v.findViewById(R.id.textView2)).setBackgroundColor(gameData.TRGB); break;
-                case 6: ((TextView)v.findViewById(R.id.textView2)).setBackgroundColor(gameData.BRGB); break;
+                case 4: ((TextView)v.findViewById(R.id.textView3)).setBackgroundColor(gameData.HRGB);
+                        ((TextView)v.findViewById(R.id.textView3)).setVisibility(View.VISIBLE);break;
+                case 5: ((TextView)v.findViewById(R.id.textView3)).setBackgroundColor(gameData.TRGB);
+                        ((TextView)v.findViewById(R.id.textView3)).setVisibility(View.VISIBLE);break;
+                case 6: ((TextView)v.findViewById(R.id.textView3)).setBackgroundColor(gameData.BRGB);
+                        ((TextView)v.findViewById(R.id.textView3)).setVisibility(View.VISIBLE);break;
             }
             return "";
         }
