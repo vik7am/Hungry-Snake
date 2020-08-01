@@ -10,9 +10,6 @@ public class GameData {
     int SIZE;
     int SPEED;
     int LENGTH;
-    int HR,HG,HB;
-    int TR,TG,TB;
-    int BR,BG,BB;
     int HRGB,BRGB,TRGB;
     int DEVICE_WIDTH,DEVICE_HEIGHT;
     int MODE,DEFAULT_COLOR;
@@ -20,8 +17,7 @@ public class GameData {
     boolean SOUND,DEVICE;
     SharedPreferences sp;
 
-    GameData(Context context)
-    {
+    GameData(Context context) {
         sp=context.getSharedPreferences("GameData", Context.MODE_PRIVATE);
         getDisplay(context);
         SIZE=sp.getInt("SIZE", (DEVICE_WIDTH/100)*10);
@@ -37,15 +33,13 @@ public class GameData {
         DEVICE=sp.getBoolean("DEVICE", true);
 
     }
-    public void getDisplay(Context context)
-    {
+    public void getDisplay(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         DEVICE_WIDTH = displayMetrics.widthPixels;
         DEVICE_HEIGHT = displayMetrics.heightPixels;
     }
 
-    public void save(Context context)
-    {
+    public void save() {
         SharedPreferences.Editor e=sp.edit();
         e.putInt("SIZE",SIZE);
         e.putInt("SPEED",SPEED);

@@ -7,32 +7,26 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
 
-    Context c=this;
-    Handler mHandler;
-    Intent i;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mHandler = new Handler();
     }
 
     public void startGame(View view) {
-        i = new Intent(c, GamePanelActivity.class);
-        startActivity(i);
+        startActivity(new Intent(this, GamePanelActivity.class));
     }
+
     public void setting(View view) {
-        i = new Intent(c, Setting.class);
-        startActivity(i);
+        startActivity(new Intent(this, Setting.class));
     }
+
     public void exitGame(View view) {
         finish();
     }
@@ -73,7 +67,5 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-
     }
-
 }

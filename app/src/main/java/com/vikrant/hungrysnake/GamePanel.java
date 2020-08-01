@@ -23,8 +23,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     int DEVICE_WIDTH,DEVICE_HEIGHT,WIDTH,HEIGHT,SLEEP_TIME;
     Egg egg;
 
-    public GamePanel(Context context)
-    {
+    public GamePanel(Context context) {
         super(context);
         gameData = new GameData(getContext());
         SLEEP_TIME=gameData.SPEED*10;
@@ -34,11 +33,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         getHolder().addCallback(this);
     }
 
-    public void resumeGame()
-    {
+    public void resumeGame() {
         RUN=true;
         task=new MyAsyncTask(getContext());
-        System.out.println("Game resumed");
     }
 
     @Override
@@ -51,7 +48,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder holder){
-        System.out.println("Surface Created");
         DEVICE_WIDTH=gameData.DEVICE_WIDTH; DEVICE_HEIGHT=gameData.DEVICE_HEIGHT;
         WIDTH=DEVICE_WIDTH-DEVICE_WIDTH%snake.SIZE;HEIGHT=DEVICE_HEIGHT-DEVICE_HEIGHT%snake.SIZE;
         snake.setWidthHeight(WIDTH, HEIGHT);
@@ -64,7 +60,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         super.draw(canvas);
         canvas.drawColor(gameData.BRGB);
         paint.setStyle(Paint.Style.FILL);
-
         paint.setColor(gameData.HRGB);
         canvas.drawRect(snake.X.get(0), snake.Y.get(0), snake.X.get(0) + snake.SIZE, snake.Y.get(0) + snake.SIZE, paint);
         paint.setColor(gameData.TRGB);
@@ -77,16 +72,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event)
-    {
-        if(event.getAction()==MotionEvent.ACTION_DOWN)
-        {
+    public boolean onTouchEvent(MotionEvent event) {
+        if(event.getAction()==MotionEvent.ACTION_DOWN) {
             SX1 = event.getX();
             SY1 = event.getY();
             return true;
         }
-        if(event.getAction()==MotionEvent.ACTION_UP)
-        {
+        if(event.getAction()==MotionEvent.ACTION_UP) {
             SX2 = event.getX();
             SY2 = event.getY();
             SX3=SX2-SX1;
@@ -98,35 +90,32 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 
 
-    class MyAsyncTask extends AsyncTask<Void,Void,Void> implements android.content.DialogInterface.OnClickListener
-    {
+    class MyAsyncTask extends AsyncTask<Void,Void,Void> implements android.content.DialogInterface.OnClickListener {
         Context context;
-        public MyAsyncTask(Context context)
-        {
+        public MyAsyncTask(Context context) {
             this.context=context;
         }
 
         @Override
-        protected Void doInBackground(Void... params)
-        {
+        protected Void doInBackground(Void... params) {
             long st,et,d;
-            while(RUN)
-            {
+            while(RUN) {
                 st=System.currentTimeMillis();
                 snake.move(true);
                 if(snake.collision())
                     break;
-                Canvas canvas = getHolder().lockCanvas();
-                if(canvas!=null)
-                {
-                    draw(canvas);
-                    getHolder().unlockCanvasAndPost(canvas);
-                }
+                ((Activity)context).runOnUiThread(new Runnable() {
+                    public void run() {
+                        Canvas canvas = getHolder().lockCanvas();
+                        if(canvas!=null) {
+                            draw(canvas);
+                            getHolder().unlockCanvasAndPost(canvas);
+                        }
+                    }
+                });
                 et=System.currentTimeMillis();
                 d=et-st;
-                //System.out.println("Time: "+d);
-                try
-                {
+                try {
                     if(d<SLEEP_TIME)
                         Thread.sleep(SLEEP_TIME-d);
                 }
@@ -143,7 +132,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
         @Override
         protected void onPostExecute(Void result) {
-
             super.onPostExecute(result);
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
             if(getHighScore(snake.LENGTH-2))
@@ -154,21 +142,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             alertDialogBuilder.setPositiveButton("OK", this);
             alertDialogBuilder.show();
         }
-        public boolean getHighScore(int x)
-        {
+
+        public boolean getHighScore(int x) {
             String[] score=gameData.HIGH_SCORE.split("\\.");
             int[] high=new int[score.length];
-            for(int i=0;i<score.length;i++)
-            {
+            for(int i=0;i<score.length;i++) {
                 //System.out.println(score[i]);
                 high[i]=Integer.parseInt(score[i]);
             }
-
-            if(x>high[gameData.MODE])
-            {
+            if(x>high[gameData.MODE]) {
                 high[gameData.MODE]=x;
                 gameData.HIGH_SCORE=""+high[0]+"."+high[1]+"."+high[2]+"."+high[3]+"."+high[4];
-                gameData.save(context);
+                gameData.save();
                 return true;
             }
             else

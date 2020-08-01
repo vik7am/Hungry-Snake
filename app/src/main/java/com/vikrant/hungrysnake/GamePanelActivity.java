@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-public class GamePanelActivity extends Activity{
+public class GamePanelActivity extends Activity {
 
     GamePanel gamePanel;
 
@@ -37,11 +37,9 @@ public class GamePanelActivity extends Activity{
         gamePanel.setVisibility(View.GONE);
     }
 
-
     @Override
     protected void onPause() {
         super.onPause();
         gamePanel.task.cancel(false);
-
     }
 }

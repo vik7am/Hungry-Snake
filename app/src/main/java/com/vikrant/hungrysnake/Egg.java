@@ -1,6 +1,5 @@
 package com.vikrant.hungrysnake;
 
-
 import java.util.Random;
 
 public class Egg{
@@ -11,25 +10,20 @@ public class Egg{
     Random random;
     Snake snake;
 
-    Egg(int x)
-    {
+    Egg(int x) {
         SIZE=x;
         random=new Random();
     }
 
-    public void setWidthHeight(int x,int y)
-    {
+    public void setWidthHeight(int x,int y) {
         WIDTH=x;HEIGHT=y;
-        //System.out.print("w:"+WIDTH+"h:"+HEIGHT);
     }
 
-    public void setSnake(Snake snake)
-    {
+    public void setSnake(Snake snake) {
         this.snake=snake;
     }
 
-    public boolean eatEgg(int x,int y)
-    {
+    public boolean eatEgg(int x,int y) {
         if(x==X&&y==Y)
         {
             return true;
@@ -39,12 +33,10 @@ public class Egg{
 
     }
 
-    public void newEgg(int SX,int SY)
-    {
+    public void newEgg(int SX,int SY) {
         boolean EGG;
         int x,y;
-        do
-        {
+        do {
             EGG=false;
             x=random.nextInt(WIDTH/SIZE);
             y=random.nextInt(HEIGHT/SIZE);
@@ -57,10 +49,8 @@ public class Egg{
         }while(EGG);
     }
 
-    boolean develop(int x,int y,boolean NEW)
-    {
-        if(eatEgg(x, y))
-        {
+    boolean develop(int x,int y,boolean NEW) {
+        if(eatEgg(x, y)) {
             if(NEW)
                 newEgg(x,y);
             return true;
