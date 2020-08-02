@@ -13,6 +13,7 @@ public class GameData {
     int HRGB,BRGB,TRGB;
     int DEVICE_WIDTH,DEVICE_HEIGHT;
     int MODE,DEFAULT_COLOR;
+    boolean NIGHT_MODE;
     String HIGH_SCORE;
     SharedPreferences sp;
     SharedPreferences.Editor e;
@@ -29,6 +30,7 @@ public class GameData {
         MODE=sp.getInt("MODE", 1);
         DEFAULT_COLOR=sp.getInt("DEFAULT_COLOR", 2);
         HIGH_SCORE=sp.getString("HIGH_SCORE", "0.0.0.0.0");
+        NIGHT_MODE=sp.getBoolean("NIGHT_MODE",false);
 
     }
     public void getDisplay(Context context) {
@@ -48,6 +50,7 @@ public class GameData {
         e.putInt("MODE", MODE);
         e.putInt("DEFAULT_COLOR", DEFAULT_COLOR);
         e.putString("HIGH_SCORE", HIGH_SCORE);
+        e.putBoolean("NIGHT_MODE",NIGHT_MODE);
         e.apply();
     }
 }

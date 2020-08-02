@@ -135,8 +135,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             AlertDialog.Builder alertDialogBuilder;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1)
-                alertDialogBuilder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Dialog_Alert);
+            if(context.getSharedPreferences("GameData", Context.MODE_PRIVATE).getBoolean("NIGHT_MODE",false))
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1)
+                    alertDialogBuilder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Dialog_Alert);
+                else
+                    alertDialogBuilder = new AlertDialog.Builder(context);
             else
                 alertDialogBuilder = new AlertDialog.Builder(context);
             if(getHighScore(snake.LENGTH-2))

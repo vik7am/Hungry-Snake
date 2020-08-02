@@ -26,13 +26,20 @@ public class Setting extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getSharedPreferences("GameData", Context.MODE_PRIVATE).getBoolean("NIGHT_MODE",true))
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         setContentView(R.layout.activity_setting);
         listView=findViewById(R.id.listView1);
         myAdapter= new MyAdapter(this);
         listView.setAdapter(myAdapter);
         listView.setOnItemClickListener(myAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(getSharedPreferences("GameData", Context.MODE_PRIVATE).getBoolean("NIGHT_MODE",false))
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
 
     @Override
@@ -53,10 +60,12 @@ public class Setting extends AppCompatActivity{
         int red,green,blue;
         int RGB;
         int SIZE_SPEED;
+        //boolean NIGHT_MODE;
         AlertDialog.Builder builder;
-        String [] label={"Difficulty","Color","Size","Speed","Head","Tail","Background"};
+        String [] label={"Theme","Difficulty","Color","Size","Speed","Head","Tail","Background"};
         String [] level={"Easy","Medium","Hard","Very Hard","Custom"};
         String [] color={"Red","Green","Blue","Custom"};
+        String [] theme={"Light","Dark"};
 
         public MyAdapter(Context context) {
             this.context=context;
@@ -65,7 +74,7 @@ public class Setting extends AppCompatActivity{
 
         @Override
         public int getCount() {
-            return 7;
+            return 8;
         }
 
         @Override
@@ -97,15 +106,17 @@ public class Setting extends AppCompatActivity{
         {
             switch(n)
             {
-                case 0: return ""+level[gameData.MODE];
-                case 1: return ""+color[gameData.DEFAULT_COLOR];
-                case 2: return ""+gameData.SIZE;
-                case 3: return ""+gameData.SPEED;
-                case 4: (v.findViewById(R.id.textView3)).setBackgroundColor(gameData.HRGB);
+                case 0: if(gameData.NIGHT_MODE) return "Dark";
+                else return "Light";
+                case 1: return ""+level[gameData.MODE];
+                case 2: return ""+color[gameData.DEFAULT_COLOR];
+                case 3: return ""+gameData.SIZE;
+                case 4: return ""+gameData.SPEED;
+                case 5: (v.findViewById(R.id.textView3)).setBackgroundColor(gameData.HRGB);
                         (v.findViewById(R.id.textView3)).setVisibility(View.VISIBLE);break;
-                case 5: (v.findViewById(R.id.textView3)).setBackgroundColor(gameData.TRGB);
+                case 6: (v.findViewById(R.id.textView3)).setBackgroundColor(gameData.TRGB);
                         (v.findViewById(R.id.textView3)).setVisibility(View.VISIBLE);break;
-                case 6: (v.findViewById(R.id.textView3)).setBackgroundColor(gameData.BRGB);
+                case 7: (v.findViewById(R.id.textView3)).setBackgroundColor(gameData.BRGB);
                         (v.findViewById(R.id.textView3)).setVisibility(View.VISIBLE);break;
             }
             return "";
@@ -115,23 +126,24 @@ public class Setting extends AppCompatActivity{
             index=position;
             builder=new AlertDialog.Builder(context);
             switch(position) {
-                case 0:builder.setItems(level, this);  break;
-                case 1:builder.setItems(color, this);  break;
-                case 2: case 3:
+                case 0:builder.setItems(theme, this);  break;
+                case 1:builder.setItems(level, this);  break;
+                case 2:builder.setItems(color, this);  break;
+                case 3: case 4:
                 view=LayoutInflater.from(context).inflate(R.layout.dialog, null);
                 seekBar= view.findViewById(R.id.seekBar);
                 textView= view.findViewById(R.id.textView);
                 seekBar.setOnSeekBarChangeListener(this);
                 switch(position) {
-                    case 2:SIZE_SPEED=gameData.SIZE; break;
-                    case 3:SIZE_SPEED=gameData.SPEED; break;
+                    case 3:SIZE_SPEED=gameData.SIZE; break;
+                    case 4:SIZE_SPEED=gameData.SPEED; break;
                 }
                 seekBar.setProgress(SIZE_SPEED);
                 textView.setText(""+SIZE_SPEED);
                 builder.setPositiveButton("ok", this);
                 builder.setNegativeButton("cancel", this);
                 builder.setView(view); break;
-                case 4: case 5: case 6:
+                case 5: case 6: case 7:
                 view=LayoutInflater.from(context).inflate(R.layout.color_palette, null);
                 seekBar1= view.findViewById(R.id.seekBar1);
                 seekBar2= view.findViewById(R.id.seekBar2);
@@ -145,9 +157,9 @@ public class Setting extends AppCompatActivity{
                 seekBar2.setOnSeekBarChangeListener(this);
                 seekBar3.setOnSeekBarChangeListener(this);
                 switch(position) {
-                    case 4: RGB=gameData.HRGB; break;
-                    case 5: RGB=gameData.TRGB; break;
-                    case 6: RGB=gameData.BRGB; break;
+                    case 5: RGB=gameData.HRGB; break;
+                    case 6: RGB=gameData.TRGB; break;
+                    case 7: RGB=gameData.BRGB; break;
                 }
                 red= Color.red(RGB);green=Color.green(RGB);blue=Color.blue(RGB);
                 seekBar1.setProgress(red);
@@ -166,11 +178,11 @@ public class Setting extends AppCompatActivity{
         public void onClick(DialogInterface dialog, int which) {
             if(which==-1) {
                 switch(index) {
-                    case 2: gameData.SIZE=SIZE_SPEED;  gameData.MODE=4;break;
-                    case 3:	gameData.SPEED=SIZE_SPEED; gameData.MODE=4;break;
-                    case 4: gameData.HRGB=Color.rgb(red, green, blue); gameData.DEFAULT_COLOR=3;break;
-                    case 5: gameData.TRGB=Color.rgb(red, green, blue); gameData.DEFAULT_COLOR=3; break;
-                    case 6: gameData.BRGB=Color.rgb(red, green, blue); gameData.DEFAULT_COLOR=3; break;
+                    case 3: gameData.SIZE=SIZE_SPEED;  gameData.MODE=4;break;
+                    case 4:	gameData.SPEED=SIZE_SPEED; gameData.MODE=4;break;
+                    case 5: gameData.HRGB=Color.rgb(red, green, blue); gameData.DEFAULT_COLOR=3;break;
+                    case 6: gameData.TRGB=Color.rgb(red, green, blue); gameData.DEFAULT_COLOR=3; break;
+                    case 7: gameData.BRGB=Color.rgb(red, green, blue); gameData.DEFAULT_COLOR=3; break;
                 }
                 gameData.save();
             }
@@ -181,6 +193,12 @@ public class Setting extends AppCompatActivity{
                 switch(index) {
                     case 0:
                         switch(which) {
+                            case 0:gameData.NIGHT_MODE=false; gameData.BRGB=Color.rgb(255, 255, 255);break;
+                            case 1:gameData.NIGHT_MODE=true; gameData.BRGB=Color.rgb(0, 0, 0);break;
+                        }
+                        break;
+                    case 1:
+                        switch(which) {
                             case 0:gameData.MODE=0; gameData.SPEED=20; break;
                             case 1:gameData.MODE=1; gameData.SPEED=15; break;
                             case 2:gameData.MODE=2; gameData.SPEED=10; break;
@@ -189,7 +207,7 @@ public class Setting extends AppCompatActivity{
                         }
                         gameData.SIZE=(gameData.DEVICE_WIDTH/100)*10;
                         break;
-                    case 1:
+                    case 2:
                         switch(which) {
                             case 0:gameData.DEFAULT_COLOR=0; gameData.HRGB=Color.rgb(100,100,100); gameData.TRGB=Color.rgb(244,67,54); gameData.BRGB=Color.rgb(255,255,255); break;
                             case 1:gameData.DEFAULT_COLOR=1; gameData.HRGB=Color.rgb(100,100,100); gameData.TRGB=Color.rgb(0,150,136); gameData.BRGB=Color.rgb(255,255,255); break;
