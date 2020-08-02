@@ -9,4 +9,7 @@
     <string name="blue">Blue</string>
     <string name="difficulty">Difficulty</string>
     <string name="medium">Medium</string>
+    <string name="empty"> </string>
+    <string name="help">Swipe to change directtion and eat eggs to make High Score</string>
+    <string name="about">Designed and Developed by\nVikrant Kataria</string>
 </resources>

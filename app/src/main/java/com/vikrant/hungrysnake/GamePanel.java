@@ -1,5 +1,6 @@
 package com.vikrant.hungrysnake;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -71,6 +72,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction()==MotionEvent.ACTION_DOWN) {
@@ -90,6 +92,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 
 
+    @SuppressLint("StaticFieldLeak")
     class MyAsyncTask extends AsyncTask<Void,Void,Void> implements android.content.DialogInterface.OnClickListener {
         Context context;
         public MyAsyncTask(Context context) {

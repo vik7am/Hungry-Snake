@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         int id = item.getItemId();
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         if (id == R.id.help) {
-            alertDialogBuilder.setMessage("Swipe to change directtion and eat eggs to make High Score");
+            alertDialogBuilder.setMessage(R.string.help);
             alertDialogBuilder.setPositiveButton("OK", this);
             alertDialogBuilder.show();
             return true;
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             return true;
         }
         if (id == R.id.about) {
-            alertDialogBuilder.setMessage("Designed and Developed by\nVikrant Kataria");
+            alertDialogBuilder.setMessage(R.string.about);
             alertDialogBuilder.setPositiveButton("OK", this);
             alertDialogBuilder.show();
             return true;

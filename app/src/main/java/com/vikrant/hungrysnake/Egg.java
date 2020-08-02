@@ -24,16 +24,10 @@ public class Egg{
     }
 
     public boolean eatEgg(int x,int y) {
-        if(x==X&&y==Y)
-        {
-            return true;
-        }
-        else
-            return false;
-
+        return x == X && y == Y;
     }
 
-    public void newEgg(int SX,int SY) {
+    public void newEgg() {
         boolean EGG;
         int x,y;
         do {
@@ -44,15 +38,17 @@ public class Egg{
             X=x*SIZE;
             Y=y*SIZE;
             for(int i=0;i<snake.LENGTH;i++)
-                if(X==snake.X.get(i)&&Y==snake.Y.get(i))
-                    EGG=true;
+                if (X == snake.X.get(i) && Y == snake.Y.get(i)) {
+                    EGG = true;
+                    break;
+                }
         }while(EGG);
     }
 
     boolean develop(int x,int y,boolean NEW) {
         if(eatEgg(x, y)) {
             if(NEW)
-                newEgg(x,y);
+                newEgg();
             return true;
         }
         return false;

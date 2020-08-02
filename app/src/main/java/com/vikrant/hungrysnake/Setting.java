@@ -1,5 +1,6 @@
 package com.vikrant.hungrysnake;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -26,7 +27,7 @@ public class Setting extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         listView=findViewById(R.id.listView1);
-        myAdapter=new MyAdapter(this);
+        myAdapter= new MyAdapter(this);
         listView.setAdapter(myAdapter);
         listView.setOnItemClickListener(myAdapter);
     }
@@ -37,7 +38,7 @@ public class Setting extends AppCompatActivity{
         return true;
     }
 
-    class MyAdapter extends BaseAdapter implements AdapterView.OnItemClickListener, android.content.DialogInterface.OnClickListener, SeekBar.OnSeekBarChangeListener {
+    static class MyAdapter extends BaseAdapter implements AdapterView.OnItemClickListener, android.content.DialogInterface.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
         Context context;
         GameData gameData;
@@ -48,10 +49,9 @@ public class Setting extends AppCompatActivity{
         View view;
         int red,green,blue;
         int RGB;
-        int SIZE_SPEED,MODE_COLOR;
+        int SIZE_SPEED;
         AlertDialog.Builder builder;
         String [] label={"Difficulty","Color","Size","Speed","Head","Tail","Background"};
-        String [] defaultData={"Medium","Green","40","4","Grey","Green","White"};
         String [] level={"Easy","Medium","Hard","Very Hard","Custom"};
         String [] color={"Red","Green","Blue","Custom"};
 
@@ -107,6 +107,7 @@ public class Setting extends AppCompatActivity{
             }
             return "";
         }
+        @SuppressLint({"InflateParams", "SetTextI18n"})
         public void showDialog(int position) {
             index=position;
             builder=new AlertDialog.Builder(context);
@@ -171,6 +172,7 @@ public class Setting extends AppCompatActivity{
                 gameData.save();
             }
             else if(which==-2) {
+                return;
             }
             else {
                 switch(index) {
@@ -197,6 +199,7 @@ public class Setting extends AppCompatActivity{
             }
             notifyDataSetChanged();
         }
+        @SuppressLint("SetTextI18n")
         @Override
         public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
             switch(seekbar.getId()) {

@@ -14,8 +14,8 @@ public class GameData {
     int DEVICE_WIDTH,DEVICE_HEIGHT;
     int MODE,DEFAULT_COLOR;
     String HIGH_SCORE;
-    boolean SOUND,DEVICE;
     SharedPreferences sp;
+    SharedPreferences.Editor e;
 
     GameData(Context context) {
         sp=context.getSharedPreferences("GameData", Context.MODE_PRIVATE);
@@ -29,8 +29,6 @@ public class GameData {
         MODE=sp.getInt("MODE", 1);
         DEFAULT_COLOR=sp.getInt("DEFAULT_COLOR", 2);
         HIGH_SCORE=sp.getString("HIGH_SCORE", "0.0.0.0.0");
-        SOUND=sp.getBoolean("SOUND", true);
-        DEVICE=sp.getBoolean("DEVICE", true);
 
     }
     public void getDisplay(Context context) {
@@ -40,17 +38,16 @@ public class GameData {
     }
 
     public void save() {
-        SharedPreferences.Editor e=sp.edit();
+        e=sp.edit();
         e.putInt("SIZE",SIZE);
         e.putInt("SPEED",SPEED);
         e.putInt("LENGTH", LENGTH);
-        e.putBoolean("SOUND", SOUND);
         e.putInt("HRGB", HRGB);
         e.putInt("TRGB", TRGB);
         e.putInt("BRGB", BRGB);
         e.putInt("MODE", MODE);
         e.putInt("DEFAULT_COLOR", DEFAULT_COLOR);
         e.putString("HIGH_SCORE", HIGH_SCORE);
-        e.commit();
+        e.apply();
     }
 }
