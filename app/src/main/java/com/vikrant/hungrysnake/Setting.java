@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 public class Setting extends AppCompatActivity{
 
@@ -25,6 +26,8 @@ public class Setting extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getSharedPreferences("GameData", Context.MODE_PRIVATE).getBoolean("NIGHT_MODE",true))
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         setContentView(R.layout.activity_setting);
         listView=findViewById(R.id.listView1);
         myAdapter= new MyAdapter(this);

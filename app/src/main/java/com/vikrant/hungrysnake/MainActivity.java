@@ -1,6 +1,8 @@
 package com.vikrant.hungrysnake;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -16,6 +18,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getSharedPreferences("GameData", Context.MODE_PRIVATE).getBoolean("NIGHT_MODE",true))
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         setContentView(R.layout.activity_main);
     }
 

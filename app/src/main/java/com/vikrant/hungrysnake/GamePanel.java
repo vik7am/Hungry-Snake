@@ -89,9 +89,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         }
         return super.onTouchEvent(event);
     }
-
-
-
+    
     @SuppressLint("StaticFieldLeak")
     class MyAsyncTask extends AsyncTask<Void,Void,Void> implements android.content.DialogInterface.OnClickListener {
         Context context;
@@ -136,7 +134,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+            AlertDialog.Builder alertDialogBuilder;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1)
+                alertDialogBuilder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Dialog_Alert);
+            else
+                alertDialogBuilder = new AlertDialog.Builder(context);
             if(getHighScore(snake.LENGTH-2))
                 alertDialogBuilder.setMessage("High Score: "+(snake.LENGTH-2));
             else
