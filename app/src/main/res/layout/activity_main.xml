@@ -26,7 +26,7 @@
             android:minWidth="200dp"
             android:minHeight="60dp"
             android:onClick="startGame"
-            android:text="START GAME"
+            android:text="@string/start_game"
             android:textSize="20sp" />
 
         <Button
@@ -37,7 +37,7 @@
             android:minWidth="200dp"
             android:minHeight="60dp"
             android:onClick="setting"
-            android:text="SETTING"
+            android:text="@string/setting"
             android:textSize="20sp" />
 
         <Button
@@ -48,7 +48,7 @@
             android:minWidth="200dp"
             android:minHeight="60dp"
             android:onClick="exitGame"
-            android:text="EXIT"
+            android:text="@string/exit"
             android:textSize="20sp" />
 
     </LinearLayout>

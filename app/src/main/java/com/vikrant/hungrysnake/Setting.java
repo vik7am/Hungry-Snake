@@ -128,7 +128,7 @@ public class Setting extends AppCompatActivity{
                 builder.setNegativeButton("cancel", this);
                 builder.setView(view); break;
                 case 4: case 5: case 6:
-                view=LayoutInflater.from(context).inflate(R.layout.dialog_layout, null);
+                view=LayoutInflater.from(context).inflate(R.layout.color_palette, null);
                 seekBar1= view.findViewById(R.id.seekBar1);
                 seekBar2= view.findViewById(R.id.seekBar2);
                 seekBar3= view.findViewById(R.id.seekBar3);
