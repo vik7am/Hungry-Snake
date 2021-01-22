@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import androidx.preference.PreferenceManager;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 {
@@ -59,14 +60,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        canvas.drawColor(gameData.BRGB);
+        canvas.drawColor(gameData.snake_background_color);
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(gameData.HRGB);
+        paint.setColor(gameData.snake_head_color);
         canvas.drawRect(snake.X.get(0), snake.Y.get(0), snake.X.get(0) + snake.SIZE, snake.Y.get(0) + snake.SIZE, paint);
-        paint.setColor(gameData.TRGB);
+        paint.setColor(gameData.snake_body_color);
         for (int i = 1; i < snake.LENGTH; i++)
             canvas.drawRect(snake.X.get(i), snake.Y.get(i), snake.X.get(i) + snake.SIZE, snake.Y.get(i) + snake.SIZE, paint);
-        paint.setColor(gameData.TRGB);
+        paint.setColor(gameData.snake_body_color);
         canvas.drawRect(egg.X, egg.Y, egg.X + snake.SIZE, egg.Y + snake.SIZE, paint);
         paint.setColor(Color.BLACK);
 
@@ -135,7 +136,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             AlertDialog.Builder alertDialogBuilder;
-            if(context.getSharedPreferences("GameData", Context.MODE_PRIVATE).getBoolean("NIGHT_MODE",false))
+            if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("NIGHT_MODE",false))
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1)
                     alertDialogBuilder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Dialog_Alert);
                 else
@@ -158,8 +159,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
                 //System.out.println(score[i]);
                 high[i]=Integer.parseInt(score[i]);
             }
-            if(x>high[gameData.MODE]) {
-                high[gameData.MODE]=x;
+            if(x>high[gameData.difficulty]) {
+                high[gameData.difficulty]=x;
                 gameData.HIGH_SCORE=""+high[0]+"."+high[1]+"."+high[2]+"."+high[3]+"."+high[4];
                 gameData.save();
                 return true;

@@ -1,5 +1,5 @@
 package com.vikrant.hungrysnake;
-
+/*
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.app.AlertDialog;
@@ -241,4 +241,4 @@ public class Setting extends AppCompatActivity{
         }
     }
 }
-
+*/

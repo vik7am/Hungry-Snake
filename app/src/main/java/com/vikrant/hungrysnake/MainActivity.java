@@ -2,16 +2,15 @@ package com.vikrant.hungrysnake;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-
 import android.os.Bundle;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import androidx.preference.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
 
@@ -24,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        if(getSharedPreferences("GameData", Context.MODE_PRIVATE).getBoolean("NIGHT_MODE",false))
+        if(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("NIGHT_MODE",false))
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         else
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     }
 
     public void setting(View view) {
-        startActivity(new Intent(this, Setting.class));
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 
     public void exitGame(View view) {
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             return true;
         }
         if (id == R.id.high_score) {
-            String HIGH_SCORE=getSharedPreferences("GameData", Context.MODE_PRIVATE).getString("HIGH_SCORE", "0.0.0.0.0");
+            String HIGH_SCORE= PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("HIGH_SCORE", "0.0.0.0.0");
             String[] score=HIGH_SCORE.split("\\.");
             String message="Easy:          "+score[0]+"\nMedium:    "+score[1]+"\nHard:          "+score[2]+"\nVery Hard: "+score[3]+"\nCustom:     "+score[4];
             alertDialogBuilder.setMessage(message);

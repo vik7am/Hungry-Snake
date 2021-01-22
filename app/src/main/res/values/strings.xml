@@ -12,4 +12,21 @@
     <string name="empty"> </string>
     <string name="help">Swipe to change directtion and eat eggs to make High Score</string>
     <string name="about">Designed and Developed by\nVikrant Kataria</string>
+    <string name="title_activity_settings">Setting</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Basic Setting</string>
+    <string name="sync_header">Advanced Setting</string>
+
+    <!-- Messages Preferences -->
+    <string name="basic_setting1">Night Mode</string>
+    <string name="basic_setting2">Difficulty</string>
+    <string name="basic_setting3">Color</string>
+
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>

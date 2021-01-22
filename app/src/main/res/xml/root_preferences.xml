@@ -1,0 +1,51 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/messages_header" app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:key="NIGHT_MODE"
+            app:title="@string/basic_setting1"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            app:defaultValue="1"
+            app:entries="@array/difficulty"
+            app:entryValues="@array/difficulty_values"
+            app:key="difficulty"
+            app:title="@string/basic_setting2"
+            app:iconSpaceReserved="false"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="Green"
+            app:entries="@array/color"
+            app:entryValues="@array/color"
+            app:key="color"
+            app:title="@string/basic_setting3"
+            app:iconSpaceReserved="false"
+            app:useSimpleSummaryProvider="true" />
+<!--
+        <EditTextPreference
+            app:key="signature"
+            app:title="@string/basic_setting3"
+            app:iconSpaceReserved="false"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/sync_header" app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:key="sync"
+            app:title="@string/sync_title" />
+
+        <SwitchPreferenceCompat
+            app:dependency="sync"
+            app:key="attachment"
+            app:summaryOff="@string/attachment_summary_off"
+            app:summaryOn="@string/attachment_summary_on"
+            app:title="@string/attachment_title" />
+-->
+    </PreferenceCategory>
+
+</PreferenceScreen>
