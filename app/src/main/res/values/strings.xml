@@ -22,6 +22,7 @@
     <string name="basic_setting1">Night Mode</string>
     <string name="basic_setting2">Difficulty</string>
     <string name="basic_setting3">Color</string>
+    <string name="basic_setting4">Size</string>
 
 
     <!-- Sync Preferences -->

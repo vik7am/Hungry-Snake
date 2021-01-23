@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.widget.Toast;
 import androidx.preference.PreferenceManager;
 
 public class GameData {
@@ -29,7 +31,8 @@ public class GameData {
         snake_head_color=getColor(sp.getString("color","Green"),"HEAD");
         snake_body_color=getColor(sp.getString("color","Green"),"BODY");
         snake_background_color=getColor(sp.getString("color","Green"),"BACKGROUND");
-        SIZE=sp.getInt("SIZE", (DEVICE_WIDTH/100)*10);
+        SIZE=(DEVICE_WIDTH/100)*5*getSize(sp.getString("size", "Medium"));
+        //SIZE=getSize(sp.getString("size", (DEVICE_WIDTH/100)*10));
         SPEED=getSpeed(sp.getString("difficulty", "1"));
         LENGTH=sp.getInt("LENGTH", 2);
         //HRGB=sp.getInt("HRGB", Color.rgb(100,100,100));
@@ -37,15 +40,24 @@ public class GameData {
         //BRGB=sp.getInt("BRGB", Color.rgb(255,255,255));
         //DEFAULT_COLOR=sp.getInt("DEFAULT_COLOR", 2);
         HIGH_SCORE=sp.getString("HIGH_SCORE", "0.0.0.0.0");
+        Log.d("speed",""+SPEED);
+        Log.d("Size",""+SIZE);
+    }
 
+    private int getSize(String size) {
+        switch(size) {
+            case "Small": return 1;
+            case "Medium": return 2;
+            case "Large": return 3;
+        }
+        return 0;
     }
 
     private int getSpeed(String difficulty) {
         switch(difficulty) {
-            case "0":return 24;
-            case "1":return 12;
-            case "2":return 6;
-            case "3":return 13;
+            case "0":return 12*getSize(sp.getString("size", "Medium"));
+            case "1":return 6*getSize(sp.getString("size", "Medium"));
+            case "2":return 3*getSize(sp.getString("size", "Medium"));
         }
         return 12;
     }
@@ -59,7 +71,6 @@ public class GameData {
                     case "Red": return Color.rgb(244,67,54);
                     case "Green": return Color.rgb(0,150,136);
                     case "Blue": return Color.rgb(63,81,181);
-                    case "Custom": return Color.rgb(0,150,135);
                 }
             case "BACKGROUND":
                 if(sp.getBoolean("NIGHT_MODE",false))

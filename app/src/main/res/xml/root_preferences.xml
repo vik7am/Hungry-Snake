@@ -24,6 +24,15 @@
             app:title="@string/basic_setting3"
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="Medium"
+            app:entries="@array/size"
+            app:entryValues="@array/size"
+            app:key="size"
+            app:title="Size"
+            app:iconSpaceReserved="false"
+            app:useSimpleSummaryProvider="true" />
 <!--
         <EditTextPreference
             app:key="signature"

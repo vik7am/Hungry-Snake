@@ -9,20 +9,23 @@
         <item>Easy</item>
         <item>Normal</item>
         <item>Hard</item>
-        <item>Custom</item>
     </string-array>
     <string-array name="difficulty_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
-        <item>3</item>
     </string-array>
 
     <string-array name="color">
         <item>Red</item>
         <item>Green</item>
         <item>Blue</item>
-        <item>Custom</item>
+    </string-array>
+
+    <string-array name="size">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
     </string-array>
 
 </resources>
