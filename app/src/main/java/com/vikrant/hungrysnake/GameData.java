@@ -39,7 +39,7 @@ public class GameData {
         //TRGB=sp.getInt("TRGB", Color.rgb(63,81,181));
         //BRGB=sp.getInt("BRGB", Color.rgb(255,255,255));
         //DEFAULT_COLOR=sp.getInt("DEFAULT_COLOR", 2);
-        HIGH_SCORE=sp.getString("HIGH_SCORE", "0.0.0.0.0");
+        HIGH_SCORE=sp.getString("HIGH_SCORE", "0.0.0");
         Log.d("speed",""+SPEED);
         Log.d("Size",""+SIZE);
     }

@@ -19,14 +19,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     Paint paint;
     Snake snake;
     GameData gameData;
-    MyAsyncTask task;
-    boolean RUN;
+    //MyAsyncTask task;
+    GameThread gameThread;
+    boolean RUN,PAUSE=false;
     float SX1,SX2,SX3,SY1,SY2,SY3;
     int DEVICE_WIDTH,DEVICE_HEIGHT,WIDTH,HEIGHT,SLEEP_TIME;
     Egg egg;
+    GamePanelActivity activity;
 
-    public GamePanel(Context context) {
-        super(context);
+    public GamePanel(GamePanelActivity activity) {
+        super(activity.getApplicationContext());
+        this.activity=activity;
         gameData = new GameData(getContext());
         SLEEP_TIME=gameData.SPEED*10;
         paint=new Paint();
@@ -35,17 +38,24 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         getHolder().addCallback(this);
     }
 
-    public void resumeGame() {
+    /*public void startGameThread() {
         RUN=true;
-        task=new MyAsyncTask(getContext());
-    }
+        if(PAUSE) {
+            //pauseGame();
+        }
+        else {
+
+        }
+        //task=new MyAsyncTask(getContext());
+
+    }*/
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int DEVICE_WIDTH, int DEVICE_HEIGHT){}
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder){
-        RUN=false;
+
     }
 
     @Override
@@ -54,12 +64,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         WIDTH=DEVICE_WIDTH-DEVICE_WIDTH%snake.SIZE;HEIGHT=DEVICE_HEIGHT-DEVICE_HEIGHT%snake.SIZE;
         snake.setWidthHeight(WIDTH, HEIGHT);
         RUN=true;
-        task.execute();
+        gameThread= new GameThread(activity);
+        gameThread.start();
     }
 
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+        System.out.println("Draw called");
         canvas.drawColor(gameData.snake_background_color);
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(gameData.snake_head_color);
@@ -90,7 +102,80 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         }
         return super.onTouchEvent(event);
     }
-    
+
+    public void pauseGame() {
+        AlertDialog.Builder alertDialogBuilder;
+        alertDialogBuilder = new AlertDialog.Builder(activity);
+        if(PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("NIGHT_MODE",false))
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1)
+                alertDialogBuilder = new AlertDialog.Builder(activity, android.R.style.Theme_DeviceDefault_Dialog_Alert);
+        alertDialogBuilder.setTitle("Resume");
+        alertDialogBuilder.setMessage("Do you want to resume the game");
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                gameThread= new GameThread(activity);
+                PAUSE=false;
+                RUN=true;
+                gameThread.start();
+            }
+        });
+        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                activity.finish();
+            }
+        });
+        alertDialogBuilder.show();
+    }
+
+    public void exitGame() {
+        AlertDialog.Builder alertDialogBuilder;
+        if(PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("NIGHT_MODE",false))
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1)
+                alertDialogBuilder = new AlertDialog.Builder(activity, android.R.style.Theme_DeviceDefault_Dialog_Alert);
+            else
+                alertDialogBuilder = new AlertDialog.Builder(activity);
+        else
+            alertDialogBuilder = new AlertDialog.Builder(activity);
+        if(getHighScore(snake.LENGTH-2))
+            alertDialogBuilder.setMessage("High Score: "+(snake.LENGTH-2));
+        else
+            alertDialogBuilder.setMessage("Your Score: "+(snake.LENGTH-2));
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                activity.finish();
+            }
+        });
+        alertDialogBuilder.show();
+        //alertDialogBuilder.setPositiveButton("Yes", this);
+    }
+
+    public boolean getHighScore(int x) {
+        String[] score=gameData.HIGH_SCORE.split("\\.");
+        int[] high=new int[score.length];
+        for(int i=0;i<score.length;i++) {
+            //System.out.println(score[i]);
+            high[i]=Integer.parseInt(score[i]);
+        }
+        if(x>high[gameData.difficulty]) {
+            high[gameData.difficulty]=x;
+            gameData.HIGH_SCORE=""+high[0]+"."+high[1]+"."+high[2];
+            gameData.save();
+            return true;
+        }
+        else
+            return false;
+    }
+
+    /*@Override
+    public void onClick(DialogInterface dialog, int which) {
+        activity.finish();
+    }*/
+/*
     @SuppressLint("StaticFieldLeak")
     class MyAsyncTask extends AsyncTask<Void,Void,Void> implements android.content.DialogInterface.OnClickListener {
         Context context;
@@ -173,5 +258,5 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         public void onClick(DialogInterface dialog, int which) {
             ((Activity)context).finish();
         }
-    }
+    }*/
 }

@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import androidx.preference.PreferenceManager;
 
-public class MainActivity extends AppCompatActivity implements OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,32 +51,32 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         if (id == R.id.help) {
-            alertDialogBuilder.setMessage(R.string.help);
-            alertDialogBuilder.setPositiveButton("OK", this);
-            alertDialogBuilder.show();
+            showMessage("Swipe to change direction and eat eggs to make High Score");
             return true;
         }
         if (id == R.id.high_score) {
-            String HIGH_SCORE= PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("HIGH_SCORE", "0.0.0.0.0");
+            String HIGH_SCORE= PreferenceManager.getDefaultSharedPreferences(this).getString("HIGH_SCORE", "0.0.0");
             String[] score=HIGH_SCORE.split("\\.");
-            String message="Easy:          "+score[0]+"\nMedium:    "+score[1]+"\nHard:          "+score[2]+"\nVery Hard: "+score[3]+"\nCustom:     "+score[4];
-            alertDialogBuilder.setMessage(message);
-            alertDialogBuilder.setPositiveButton("OK", this);
-            alertDialogBuilder.show();
+            showMessage("Easy:          "+score[0]+"\nMedium:    "+score[1]+"\nHard:          "+score[2]);
             return true;
         }
         if (id == R.id.about) {
-            alertDialogBuilder.setMessage(R.string.about);
-            alertDialogBuilder.setPositiveButton("OK", this);
-            alertDialogBuilder.show();
+            showMessage("Designed and Developed by\nVikrant Kataria");
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onClick(DialogInterface dialog, int which) {
+    public void showMessage(String message) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(message);
+        alertDialogBuilder.setPositiveButton("OK", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        alertDialogBuilder.show();
     }
+
 }

@@ -2,9 +2,7 @@ package com.vikrant.hungrysnake;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.*;
 
 public class GamePanelActivity extends Activity {
 
@@ -22,13 +20,15 @@ public class GamePanelActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        gamePanel.resumeGame();
         gamePanel.setVisibility(View.VISIBLE);
+        //gamePanel.resumeGame();
+        //gamePanel.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onBackPressed() {
-        gamePanel.RUN=false;
+        gamePanel.PAUSE=true;
+        //gamePanel.RUN=false;
     }
 
     @Override
@@ -40,6 +40,9 @@ public class GamePanelActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        gamePanel.task.cancel(false);
+        gamePanel.PAUSE=true;
+        gamePanel.RUN=false;
+        //gamePanel.gameThread.stop();
+        //gamePanel.task.cancel(false);
     }
 }
