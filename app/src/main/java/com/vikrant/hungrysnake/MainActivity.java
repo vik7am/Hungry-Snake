@@ -12,8 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import androidx.preference.PreferenceManager;
 
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity extends AppCompatActivity
+{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,10 +23,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("NIGHT_MODE",false))
+        if(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("nightMode",false))
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         else
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        System.out.println("Night Mode is called");
     }
 
     public void startGame(View view) {
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.high_score) {
-            String HIGH_SCORE= PreferenceManager.getDefaultSharedPreferences(this).getString("HIGH_SCORE", "0.0.0");
+            String HIGH_SCORE= PreferenceManager.getDefaultSharedPreferences(this).getString("highScore", "0.0.0");
             String[] score=HIGH_SCORE.split("\\.");
             showMessage("Easy:          "+score[0]+"\nMedium:    "+score[1]+"\nHard:          "+score[2]);
             return true;
@@ -78,5 +79,4 @@ public class MainActivity extends AppCompatActivity {
         });
         alertDialogBuilder.show();
     }
-
 }

@@ -4,19 +4,19 @@ import java.util.Random;
 
 public class Egg{
 
-    int X,Y;
-    int SIZE;
-    int WIDTH,HEIGHT;
+    int eggX,eggY;
+    int snakeSize;
+    int deviceWidth,deviceHeight;
+    int randomX, randomY;
+    boolean egg;
     Random random;
     Snake snake;
 
-    Egg(int x) {
-        SIZE=x;
+    Egg(GameData gamedata) {
+        deviceWidth=gamedata.deviceWidth;
+        deviceHeight=gamedata.deviceHeight;
+        snakeSize=gamedata.snakeSize;
         random=new Random();
-    }
-
-    public void setWidthHeight(int x,int y) {
-        WIDTH=x;HEIGHT=y;
     }
 
     public void setSnake(Snake snake) {
@@ -24,25 +24,24 @@ public class Egg{
     }
 
     public boolean eatEgg(int x,int y) {
-        return x == X && y == Y;
+        return x == eggX && y == eggY;
     }
 
     public void newEgg() {
-        boolean EGG;
-        int x,y;
+
         do {
-            EGG=false;
-            x=random.nextInt(WIDTH/SIZE);
-            y=random.nextInt(HEIGHT/SIZE);
-            System.out.println("Random X:"+x+"Y:"+y);
-            X=x*SIZE;
-            Y=y*SIZE;
-            for(int i=0;i<snake.LENGTH;i++)
-                if (X == snake.X.get(i) && Y == snake.Y.get(i)) {
-                    EGG = true;
+            egg=false;
+            randomX=random.nextInt(deviceWidth/snakeSize);
+            randomY=random.nextInt(deviceHeight/snakeSize);
+            System.out.println("Random X:"+randomX+"Y:"+randomY);
+            eggX=randomX*snakeSize;
+            eggY=randomY*snakeSize;
+            for(int i=0;i<snake.length;i++)
+                if (eggX == snake.snakeX.get(i) && eggY == snake.snakeY.get(i)) {
+                    egg = true;
                     break;
                 }
-        }while(EGG);
+        }while(egg);
     }
 
     boolean develop(int x,int y,boolean NEW) {

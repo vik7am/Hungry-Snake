@@ -21,14 +21,11 @@ public class GamePanelActivity extends Activity {
     protected void onResume() {
         super.onResume();
         gamePanel.setVisibility(View.VISIBLE);
-        //gamePanel.resumeGame();
-        //gamePanel.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onBackPressed() {
-        gamePanel.PAUSE=true;
-        //gamePanel.RUN=false;
+        gamePanel.pause=true;
     }
 
     @Override
@@ -40,9 +37,7 @@ public class GamePanelActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        gamePanel.PAUSE=true;
-        gamePanel.RUN=false;
-        //gamePanel.gameThread.stop();
-        //gamePanel.task.cancel(false);
+        gamePanel.pause=true;
+        gamePanel.snake.running=false;
     }
 }

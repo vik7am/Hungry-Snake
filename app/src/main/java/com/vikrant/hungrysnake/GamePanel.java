@@ -16,25 +16,26 @@ import androidx.preference.PreferenceManager;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 {
-    Paint paint;
-    Snake snake;
-    GameData gameData;
-    //MyAsyncTask task;
-    GameThread gameThread;
-    boolean RUN,PAUSE=false;
+    boolean pause;
+    int sleepTime;
     float SX1,SX2,SX3,SY1,SY2,SY3;
-    int DEVICE_WIDTH,DEVICE_HEIGHT,WIDTH,HEIGHT,SLEEP_TIME;
+    Paint paint;
+    GameData gameData;
     Egg egg;
+    Snake snake;
+    GameThread gameThread;
     GamePanelActivity activity;
+    AlertDialog.Builder alertDialogBuilder;
 
     public GamePanel(GamePanelActivity activity) {
         super(activity.getApplicationContext());
         this.activity=activity;
         gameData = new GameData(getContext());
-        SLEEP_TIME=gameData.SPEED*10;
-        paint=new Paint();
-        egg=new Egg(gameData.SIZE);
+        egg=new Egg(gameData);
         snake=new Snake(gameData,egg);
+        sleepTime=gameData.snakeSpeed*10;
+        paint=new Paint();
+        pause=false;
         getHolder().addCallback(this);
     }
 
@@ -60,10 +61,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder holder){
-        DEVICE_WIDTH=gameData.DEVICE_WIDTH; DEVICE_HEIGHT=gameData.DEVICE_HEIGHT;
-        WIDTH=DEVICE_WIDTH-DEVICE_WIDTH%snake.SIZE;HEIGHT=DEVICE_HEIGHT-DEVICE_HEIGHT%snake.SIZE;
-        snake.setWidthHeight(WIDTH, HEIGHT);
-        RUN=true;
+        snake.running=true;
         gameThread= new GameThread(activity);
         gameThread.start();
     }
@@ -71,16 +69,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        System.out.println("Draw called");
-        canvas.drawColor(gameData.snake_background_color);
+        canvas.drawColor(gameData.backgroundColor);
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(gameData.snake_head_color);
-        canvas.drawRect(snake.X.get(0), snake.Y.get(0), snake.X.get(0) + snake.SIZE, snake.Y.get(0) + snake.SIZE, paint);
-        paint.setColor(gameData.snake_body_color);
-        for (int i = 1; i < snake.LENGTH; i++)
-            canvas.drawRect(snake.X.get(i), snake.Y.get(i), snake.X.get(i) + snake.SIZE, snake.Y.get(i) + snake.SIZE, paint);
-        paint.setColor(gameData.snake_body_color);
-        canvas.drawRect(egg.X, egg.Y, egg.X + snake.SIZE, egg.Y + snake.SIZE, paint);
+        paint.setColor(gameData.headColor);
+        canvas.drawRect(snake.snakeX.get(0), snake.snakeY.get(0), snake.snakeX.get(0) + snake.size, snake.snakeY.get(0) + snake.size, paint);
+        paint.setColor(gameData.bodyColor);
+        for (int i = 1; i < snake.length; i++)
+            canvas.drawRect(snake.snakeX.get(i), snake.snakeY.get(i), snake.snakeX.get(i) + snake.size, snake.snakeY.get(i) + snake.size, paint);
+        paint.setColor(gameData.bodyColor);
+        canvas.drawRect(egg.eggX, egg.eggY, egg.eggX + snake.size, egg.eggY + snake.size, paint);
         paint.setColor(Color.BLACK);
 
     }
@@ -104,9 +101,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void pauseGame() {
-        AlertDialog.Builder alertDialogBuilder;
         alertDialogBuilder = new AlertDialog.Builder(activity);
-        if(PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("NIGHT_MODE",false))
+        if(PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("nightMode",false))
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1)
                 alertDialogBuilder = new AlertDialog.Builder(activity, android.R.style.Theme_DeviceDefault_Dialog_Alert);
         alertDialogBuilder.setTitle("Resume");
@@ -116,8 +112,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 gameThread= new GameThread(activity);
-                PAUSE=false;
-                RUN=true;
+                pause=false;
+                snake.running=true;
                 gameThread.start();
             }
         });
@@ -131,18 +127,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void exitGame() {
-        AlertDialog.Builder alertDialogBuilder;
-        if(PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("NIGHT_MODE",false))
+        alertDialogBuilder = new AlertDialog.Builder(activity);
+        if(PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("nightMode",false))
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1)
                 alertDialogBuilder = new AlertDialog.Builder(activity, android.R.style.Theme_DeviceDefault_Dialog_Alert);
-            else
-                alertDialogBuilder = new AlertDialog.Builder(activity);
+        if(getHighScore(snake.length-2))
+            alertDialogBuilder.setMessage("High Score: "+(snake.length-2));
         else
-            alertDialogBuilder = new AlertDialog.Builder(activity);
-        if(getHighScore(snake.LENGTH-2))
-            alertDialogBuilder.setMessage("High Score: "+(snake.LENGTH-2));
-        else
-            alertDialogBuilder.setMessage("Your Score: "+(snake.LENGTH-2));
+            alertDialogBuilder.setMessage("Your Score: "+(snake.length-2));
         alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -151,11 +143,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             }
         });
         alertDialogBuilder.show();
-        //alertDialogBuilder.setPositiveButton("Yes", this);
     }
 
     public boolean getHighScore(int x) {
-        String[] score=gameData.HIGH_SCORE.split("\\.");
+        String[] score=gameData.highScore.split("\\.");
         int[] high=new int[score.length];
         for(int i=0;i<score.length;i++) {
             //System.out.println(score[i]);
@@ -163,100 +154,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         }
         if(x>high[gameData.difficulty]) {
             high[gameData.difficulty]=x;
-            gameData.HIGH_SCORE=""+high[0]+"."+high[1]+"."+high[2];
+            gameData.highScore=""+high[0]+"."+high[1]+"."+high[2];
             gameData.save();
             return true;
         }
         else
             return false;
     }
-
-    /*@Override
-    public void onClick(DialogInterface dialog, int which) {
-        activity.finish();
-    }*/
-/*
-    @SuppressLint("StaticFieldLeak")
-    class MyAsyncTask extends AsyncTask<Void,Void,Void> implements android.content.DialogInterface.OnClickListener {
-        Context context;
-        public MyAsyncTask(Context context) {
-            this.context=context;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            long st,et,d;
-            while(RUN) {
-                st=System.currentTimeMillis();
-                snake.move(true);
-                if(snake.collision())
-                    break;
-                ((Activity)context).runOnUiThread(new Runnable() {
-                    public void run() {
-                        Canvas canvas = getHolder().lockCanvas();
-                        if(canvas!=null) {
-                            draw(canvas);
-                            getHolder().unlockCanvasAndPost(canvas);
-                        }
-                    }
-                });
-                et=System.currentTimeMillis();
-                d=et-st;
-                try {
-                    if(d<SLEEP_TIME)
-                        Thread.sleep(SLEEP_TIME-d);
-                }
-                catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if(isCancelled())
-                    break;
-            }
-            System.out.println("Thread is Exiting");
-            return null;
-
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            AlertDialog.Builder alertDialogBuilder;
-            if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("NIGHT_MODE",false))
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1)
-                    alertDialogBuilder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Dialog_Alert);
-                else
-                    alertDialogBuilder = new AlertDialog.Builder(context);
-            else
-                alertDialogBuilder = new AlertDialog.Builder(context);
-            if(getHighScore(snake.LENGTH-2))
-                alertDialogBuilder.setMessage("High Score: "+(snake.LENGTH-2));
-            else
-                alertDialogBuilder.setMessage("Your Score: "+(snake.LENGTH-2));
-            alertDialogBuilder.setCancelable(false);
-            alertDialogBuilder.setPositiveButton("OK", this);
-            alertDialogBuilder.show();
-        }
-
-        public boolean getHighScore(int x) {
-            String[] score=gameData.HIGH_SCORE.split("\\.");
-            int[] high=new int[score.length];
-            for(int i=0;i<score.length;i++) {
-                //System.out.println(score[i]);
-                high[i]=Integer.parseInt(score[i]);
-            }
-            if(x>high[gameData.difficulty]) {
-                high[gameData.difficulty]=x;
-                gameData.HIGH_SCORE=""+high[0]+"."+high[1]+"."+high[2]+"."+high[3]+"."+high[4];
-                gameData.save();
-                return true;
-            }
-            else
-                return false;
-        }
-
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            ((Activity)context).finish();
-        }
-    }*/
 }

@@ -4,82 +4,85 @@ import java.util.ArrayList;
 
 public class Snake{
 
-    int LENGTH;
-    int SIZE;
-    int WIDTH,HEIGHT;
-    boolean HORIZONTAL,FORWARD;
-    ArrayList<Integer> X;
-    ArrayList<Integer> Y;
+    int length,size;
+    int deviceWidth,deviceHeight;
+    boolean horizontal,forward, running;
+    ArrayList<Integer> snakeX;
+    ArrayList<Integer> snakeY;
     Egg egg;
 
     Snake(GameData gameData,Egg egg) {
         this.egg=egg;
         egg.setSnake(this);
-        LENGTH=gameData.LENGTH;
-        SIZE=gameData.SIZE;
-        X=new ArrayList<>(100);
-        Y=new ArrayList<>(100);
-        X.add(SIZE);Y.add(0);
-        X.add(0);Y.add(0);
-        HORIZONTAL=true;FORWARD=true;
+        length=gameData.snakeLength;
+        size=gameData.snakeSize;
+        deviceWidth=gameData.deviceWidth;
+        deviceHeight= gameData.deviceHeight;
+        //System.out.println("H:"+deviceHeight+"W:"+deviceWidth);
+        snakeX=new ArrayList<>(100);
+        snakeY=new ArrayList<>(100);
+        snakeX.add(size);snakeY.add(0);
+        snakeX.add(0);snakeY.add(0);
+        horizontal=true;forward=true;
     }
 
     public void move(boolean NEW) {
         int x=0,y=0;
-        if(HORIZONTAL) {
-            if(FORWARD)
-                x=SIZE;
+        if(horizontal) {
+            if(forward)
+                x=size;
             else
-                x=-SIZE;
+                x=-size;
         }
         else {
-            if(FORWARD)
-                y=SIZE;
+            if(forward)
+                y=size;
             else
-                y=-SIZE;
+                y=-size;
         }
-        X.add(0, X.get(0)+x);
-        Y.add(0, Y.get(0)+y);
-        if(X.get(0)==WIDTH)
-            X.set(0, 0);
-        if(Y.get(0)==HEIGHT)
-            Y.set(0, 0);
-        if(X.get(0)==-SIZE)
-            X.set(0, WIDTH-SIZE);
-        if(Y.get(0)==-SIZE)
-            Y.set(0, HEIGHT-SIZE);
-        if(egg.develop(X.get(0),Y.get(0),NEW))
-            LENGTH++;
+        snakeX.add(0, snakeX.get(0)+x);
+        snakeY.add(0, snakeY.get(0)+y);
+        if(snakeX.get(0)==deviceWidth)
+            snakeX.set(0, 0);
+        if(snakeY.get(0)==deviceHeight)
+            snakeY.set(0, 0);
+        if(snakeX.get(0)==-size)
+            snakeX.set(0, deviceWidth-size);
+        if(snakeY.get(0)==-size)
+            snakeY.set(0, deviceHeight-size);
+        if(egg.develop(snakeX.get(0),snakeY.get(0),NEW))
+            length++;
         else {
-            X.remove(X.size()-1);
-            Y.remove(Y.size()-1);
+            snakeX.remove(snakeX.size()-1);
+            snakeY.remove(snakeY.size()-1);
         }
+        System.out.println("X:"+snakeX.get(0)+"Y"+snakeX.get(0));
     }
 
     public boolean collision() {
-        if(LENGTH<4)return false;
+        if(length<4)return false;
         int x,y;
-        x=X.get(0);
-        y=Y.get(0);
-        for(int i=4;i<LENGTH;i++)
-            if(x==X.get(i)&&y==Y.get(i))
+        x=snakeX.get(0);
+        y=snakeY.get(0);
+        for(int i=4;i<length;i++)
+            if(x==snakeX.get(i)&&y==snakeY.get(i))
                 return true;
         return false;
     }
 
     public void changeDirection(float x, float y) {
-        boolean temp=HORIZONTAL;
-        HORIZONTAL=Math.abs(x)>Math.abs(y);
-        if(HORIZONTAL==temp)
+        boolean temp=horizontal;
+        horizontal=Math.abs(x)>Math.abs(y);
+        if(horizontal==temp)
             return;
-        if(HORIZONTAL)
-            FORWARD= x > 0;
+        if(horizontal)
+            forward= x > 0;
         else
-            FORWARD= y > 0;
+            forward= y > 0;
     }
 
-    public void setWidthHeight(int x,int y) {
-        WIDTH=x;HEIGHT=y;
+    /*public void setWidthHeight(int x,int y) {
+        deviceWidth=x;deviceHeight=y;
         egg.setWidthHeight(x, y);
-    }
+    }*/
 }

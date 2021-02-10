@@ -8,6 +8,7 @@ public class GameThread extends Thread{
 
     GamePanelActivity activity;
     GamePanel gamePanel;
+    long startTime,endTime,delayTime;
 
     GameThread(GamePanelActivity activity) {
         gamePanel=activity.gamePanel;
@@ -16,10 +17,9 @@ public class GameThread extends Thread{
 
     @Override
     public void run() {
-        long st,et,d;
-        while(gamePanel.RUN) {
-            //Log.e("GameThread",""+gamePanel.snake.X.get(0));
-            st=System.currentTimeMillis();
+
+        while(gamePanel.snake.running) {
+            startTime=System.currentTimeMillis();
             gamePanel.snake.move(true);
             if(gamePanel.snake.collision())
                 break;
@@ -32,29 +32,28 @@ public class GameThread extends Thread{
                     }
                 }
             });
-            et=System.currentTimeMillis();
-            d=et-st;
+            endTime=System.currentTimeMillis();
+            delayTime=endTime-startTime;
             try {
-                if(gamePanel.PAUSE)
+                if(gamePanel.pause)
                     break;
-                if(d<gamePanel.SLEEP_TIME)
-                    Thread.sleep(gamePanel.SLEEP_TIME-d);
+                if(delayTime<gamePanel.sleepTime)
+                    Thread.sleep(gamePanel.sleepTime-delayTime);
             }
             catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
         }
-        if(gamePanel.RUN)
+        if(gamePanel.snake.running)
             activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(gamePanel.PAUSE)
+                if(gamePanel.pause)
                     gamePanel.pauseGame();
                 else
                     gamePanel.exitGame();
             }
             });
-        //System.out.println("Thread is Exiting");
     }
 }

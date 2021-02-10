@@ -5,43 +5,48 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.widget.Toast;
 import androidx.preference.PreferenceManager;
 
 public class GameData {
 
-    int SIZE;
-    int SPEED;
-    int LENGTH;
-    //int HRGB,BRGB,TRGB;
-    int DEVICE_WIDTH,DEVICE_HEIGHT;
-    int DEFAULT_COLOR;
-    int difficulty;
-    boolean NIGHT_MODE;
-    String HIGH_SCORE;
-    SharedPreferences sp;
-    SharedPreferences.Editor e;
-    int snake_head_color, snake_body_color, snake_background_color;
+    int snakeSize, snakeSpeed, snakeLength;
+    int deviceWidth,deviceHeight;
+    int difficulty, size;
+    int headColor, bodyColor, backgroundColor;
+    boolean nightMode;
+    String highScore;
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
 
     GameData(Context context) {
-        sp= PreferenceManager.getDefaultSharedPreferences(context);
+        preferences= PreferenceManager.getDefaultSharedPreferences(context);
         getDisplay(context);
-        NIGHT_MODE=sp.getBoolean("NIGHT_MODE",false);
-        difficulty=Integer.parseInt(sp.getString("difficulty", "1"));
-        snake_head_color=getColor(sp.getString("color","Green"),"HEAD");
-        snake_body_color=getColor(sp.getString("color","Green"),"BODY");
-        snake_background_color=getColor(sp.getString("color","Green"),"BACKGROUND");
-        SIZE=(DEVICE_WIDTH/100)*5*getSize(sp.getString("size", "Medium"));
-        //SIZE=getSize(sp.getString("size", (DEVICE_WIDTH/100)*10));
-        SPEED=getSpeed(sp.getString("difficulty", "1"));
-        LENGTH=sp.getInt("LENGTH", 2);
-        //HRGB=sp.getInt("HRGB", Color.rgb(100,100,100));
-        //TRGB=sp.getInt("TRGB", Color.rgb(63,81,181));
-        //BRGB=sp.getInt("BRGB", Color.rgb(255,255,255));
-        //DEFAULT_COLOR=sp.getInt("DEFAULT_COLOR", 2);
-        HIGH_SCORE=sp.getString("HIGH_SCORE", "0.0.0");
-        Log.d("speed",""+SPEED);
-        Log.d("Size",""+SIZE);
+        nightMode=preferences.getBoolean("nightMode",false);
+        difficulty=getDifficulty(preferences.getString("difficulty", "Normal"));
+        //difficulty=Integer.parseInt(preferences.getString("difficulty", "1"));
+        //headColor=getColor(preferences.getString("color","Green"),"HEAD");
+        headColor=Color.rgb(100,100,100);
+        bodyColor=getColor(preferences.getString("color","Green"),"BODY");
+        //backgroundColor=getColor(preferences.getString("color","Green"),"BACKGROUND");
+        backgroundColor=(nightMode?Color.rgb(0,0,0):Color.rgb(255,255,255));
+        size=getSize(preferences.getString("size", "Medium"));
+        snakeSize=(deviceWidth/100)*5*size;
+        snakeSpeed=getSpeed(difficulty,size);
+        snakeLength=preferences.getInt("length", 2);
+        highScore=preferences.getString("highScore", "0.0.0");
+        deviceWidth=deviceWidth-deviceWidth%snakeSize;
+        deviceHeight=deviceHeight-deviceHeight%snakeSize;
+        //Log.d("speed",""+speed);
+        //Log.d("Size",""+size);
+    }
+
+    private int getDifficulty(String difficulty) {
+        switch(difficulty) {
+            case "Easy": return 0;
+            case "Normal": return 1;
+            case "Hard": return 2;
+        }
+        return 0;
     }
 
     private int getSize(String size) {
@@ -53,49 +58,37 @@ public class GameData {
         return 0;
     }
 
-    private int getSpeed(String difficulty) {
+    private int getSpeed(int difficulty,int size) {
         switch(difficulty) {
-            case "0":return 12*getSize(sp.getString("size", "Medium"));
-            case "1":return 6*getSize(sp.getString("size", "Medium"));
-            case "2":return 3*getSize(sp.getString("size", "Medium"));
+            case 0:return 12*size;
+            case 1:return 6*size;
+            case 2:return 3*size;
         }
         return 12;
     }
 
     private int getColor(String color, String type){
-        switch(type) {
-            case "HEAD":
-                return Color.rgb(100,100,100);
-            case "BODY":
                 switch(color) {
                     case "Red": return Color.rgb(244,67,54);
                     case "Green": return Color.rgb(0,150,136);
                     case "Blue": return Color.rgb(63,81,181);
                 }
-            case "BACKGROUND":
-                if(sp.getBoolean("NIGHT_MODE",false))
-                    return Color.rgb(0,0,0);
-                else
-                    return Color.rgb(255,255,255);
-        }
         return 0;
     }
 
     public void getDisplay(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        DEVICE_WIDTH = displayMetrics.widthPixels;
-        DEVICE_HEIGHT = displayMetrics.heightPixels;
+        deviceWidth = displayMetrics.widthPixels;
+        deviceHeight = displayMetrics.heightPixels;
+        //System.out.println("H:"+deviceHeight+"W:"+deviceWidth);
     }
 
     public void save() {
-        e=sp.edit();
-        //e.putBoolean("night_mode", night_mode);
-        e.putInt("SIZE",SIZE);
-        e.putInt("SPEED",SPEED);
-        e.putInt("LENGTH", LENGTH);
-        //e.putInt("DEFAULT_COLOR", DEFAULT_COLOR);
-        e.putString("HIGH_SCORE", HIGH_SCORE);
-        //e.putBoolean("NIGHT_MODE",NIGHT_MODE);
-        e.apply();
+        editor=preferences.edit();
+        editor.putInt("size", snakeSize);
+        editor.putInt("speed", snakeSpeed);
+        editor.putInt("length", snakeLength);
+        editor.putString("highScore", highScore);
+        editor.apply();
     }
 }

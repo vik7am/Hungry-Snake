@@ -29,7 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("NIGHT_MODE",false))
+        if(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("nightMode",false))
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         else
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
