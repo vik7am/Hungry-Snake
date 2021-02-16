@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 public class Snake{
 
-    int length,size;
+    int length,size,x,y;
     int deviceWidth,deviceHeight;
-    boolean horizontal,forward, running;
+    boolean horizontal,forward,running;
+    boolean tempDirection;
     ArrayList<Integer> snakeX;
     ArrayList<Integer> snakeY;
     Egg egg;
@@ -18,16 +19,19 @@ public class Snake{
         size=gameData.snakeSize;
         deviceWidth=gameData.deviceWidth;
         deviceHeight= gameData.deviceHeight;
-        //System.out.println("H:"+deviceHeight+"W:"+deviceWidth);
-        snakeX=new ArrayList<>(100);
-        snakeY=new ArrayList<>(100);
-        snakeX.add(size);snakeY.add(0);
-        snakeX.add(0);snakeY.add(0);
-        horizontal=true;forward=true;
+        snakeX=new ArrayList<>(1);
+        snakeY=new ArrayList<>(1);
+        snakeX.add(size);
+        snakeY.add(0);
+        snakeX.add(0);
+        snakeY.add(0);
+        horizontal=true;
+        forward=true;
     }
 
     public void move(boolean NEW) {
-        int x=0,y=0;
+        x=0;
+        y=0;
         if(horizontal) {
             if(forward)
                 x=size;
@@ -56,7 +60,6 @@ public class Snake{
             snakeX.remove(snakeX.size()-1);
             snakeY.remove(snakeY.size()-1);
         }
-        System.out.println("X:"+snakeX.get(0)+"Y"+snakeX.get(0));
     }
 
     public boolean collision() {
@@ -71,18 +74,13 @@ public class Snake{
     }
 
     public void changeDirection(float x, float y) {
-        boolean temp=horizontal;
+        tempDirection=horizontal;
         horizontal=Math.abs(x)>Math.abs(y);
-        if(horizontal==temp)
+        if(horizontal==tempDirection)
             return;
         if(horizontal)
             forward= x > 0;
         else
             forward= y > 0;
     }
-
-    /*public void setWidthHeight(int x,int y) {
-        deviceWidth=x;deviceHeight=y;
-        egg.setWidthHeight(x, y);
-    }*/
 }

@@ -4,10 +4,9 @@ import java.util.Random;
 
 public class Egg{
 
-    int eggX,eggY;
-    int snakeSize;
+    int eggX,eggY,snakeSize;
     int deviceWidth,deviceHeight;
-    int randomX, randomY;
+    int randomX,randomY;
     boolean egg;
     Random random;
     Snake snake;
@@ -28,12 +27,10 @@ public class Egg{
     }
 
     public void newEgg() {
-
         do {
             egg=false;
             randomX=random.nextInt(deviceWidth/snakeSize);
             randomY=random.nextInt(deviceHeight/snakeSize);
-            System.out.println("Random X:"+randomX+"Y:"+randomY);
             eggX=randomX*snakeSize;
             eggY=randomY*snakeSize;
             for(int i=0;i<snake.length;i++)

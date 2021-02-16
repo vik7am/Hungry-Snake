@@ -8,53 +8,32 @@
             app:iconSpaceReserved="false" />
 
         <ListPreference
-            app:defaultValue="Normal"
+            app:defaultValue="1"
             app:entries="@array/difficulty"
-            app:entryValues="@array/difficulty"
+            app:entryValues="@array/difficultyValues"
             app:key="difficulty"
             app:title="@string/basic_setting2"
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:defaultValue="Green"
+            app:defaultValue="#009688"
             app:entries="@array/color"
-            app:entryValues="@array/color"
+            app:entryValues="@array/colorValues"
             app:key="color"
             app:title="@string/basic_setting3"
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:defaultValue="Medium"
+            app:defaultValue="2"
             app:entries="@array/size"
-            app:entryValues="@array/size"
+            app:entryValues="@array/sizeValues"
             app:key="size"
             app:title="Size"
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
-<!--
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/basic_setting3"
-            app:iconSpaceReserved="false"
-            app:useSimpleSummaryProvider="true" />
 
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/sync_header" app:iconSpaceReserved="false">
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
--->
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -1,8 +1,6 @@
 package com.vikrant.hungrysnake;
 
-import android.app.Activity;
 import android.graphics.Canvas;
-import android.util.Log;
 
 public class GameThread extends Thread{
 
@@ -17,36 +15,44 @@ public class GameThread extends Thread{
 
     @Override
     public void run() {
-
         while(gamePanel.snake.running) {
+            if(gamePanel.pause) {
+                updateDisplay();
+                break;
+            }
             startTime=System.currentTimeMillis();
             gamePanel.snake.move(true);
             if(gamePanel.snake.collision())
                 break;
-            activity.runOnUiThread(new Runnable() {
-                public void run() {
-                    Canvas canvas = gamePanel.getHolder().lockCanvas();
-                    if(canvas!=null) {
-                        gamePanel.draw(canvas);
-                        gamePanel.getHolder().unlockCanvasAndPost(canvas);
-                    }
-                }
-            });
+            updateDisplay();
             endTime=System.currentTimeMillis();
             delayTime=endTime-startTime;
             try {
-                if(gamePanel.pause)
-                    break;
                 if(delayTime<gamePanel.sleepTime)
                     Thread.sleep(gamePanel.sleepTime-delayTime);
             }
             catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
         if(gamePanel.snake.running)
-            activity.runOnUiThread(new Runnable() {
+            showAlertDialog();
+    }
+
+    void updateDisplay() {
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                Canvas canvas = gamePanel.getHolder().lockCanvas();
+                if(canvas!=null) {
+                    gamePanel.draw(canvas);
+                    gamePanel.getHolder().unlockCanvasAndPost(canvas);
+                }
+            }
+        });
+    }
+
+    void showAlertDialog() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if(gamePanel.pause)
@@ -54,6 +60,6 @@ public class GameThread extends Thread{
                 else
                     gamePanel.exitGame();
             }
-            });
+        });
     }
 }

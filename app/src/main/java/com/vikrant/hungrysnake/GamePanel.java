@@ -1,24 +1,23 @@
 package com.vikrant.hungrysnake;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.AsyncTask;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import androidx.preference.PreferenceManager;
+import android.annotation.SuppressLint;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 {
     boolean pause;
     int sleepTime;
+    int high[];
     float SX1,SX2,SX3,SY1,SY2,SY3;
+    String score[];
     Paint paint;
     GameData gameData;
     Egg egg;
@@ -38,18 +37,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         pause=false;
         getHolder().addCallback(this);
     }
-
-    /*public void startGameThread() {
-        RUN=true;
-        if(PAUSE) {
-            //pauseGame();
-        }
-        else {
-
-        }
-        //task=new MyAsyncTask(getContext());
-
-    }*/
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int DEVICE_WIDTH, int DEVICE_HEIGHT){}
@@ -146,12 +133,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public boolean getHighScore(int x) {
-        String[] score=gameData.highScore.split("\\.");
-        int[] high=new int[score.length];
-        for(int i=0;i<score.length;i++) {
-            //System.out.println(score[i]);
+        score=gameData.highScore.split("\\.");
+        high=new int[score.length];
+        for(int i=0;i<score.length;i++)
             high[i]=Integer.parseInt(score[i]);
-        }
         if(x>high[gameData.difficulty]) {
             high[gameData.difficulty]=x;
             gameData.highScore=""+high[0]+"."+high[1]+"."+high[2];

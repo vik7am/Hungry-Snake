@@ -10,17 +10,32 @@
         <item>Normal</item>
         <item>Hard</item>
     </string-array>
+    <string-array name="difficultyValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 
     <string-array name="color">
         <item>Red</item>
         <item>Green</item>
         <item>Blue</item>
     </string-array>
+    <string-array name="colorValues">
+        <item>#F44336</item>
+        <item>#009688</item>
+        <item>#3F51B5</item>
+    </string-array>
 
     <string-array name="size">
         <item>Small</item>
         <item>Medium</item>
         <item>Large</item>
+    </string-array>
+    <string-array name="sizeValues">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
     </string-array>
 
 </resources>
