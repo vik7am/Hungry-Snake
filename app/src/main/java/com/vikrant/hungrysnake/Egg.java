@@ -1,13 +1,15 @@
 package com.vikrant.hungrysnake;
 
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Point;
 import java.util.Random;
 
 public class Egg{
 
-    int eggX,eggY,snakeSize;
+    int snakeSize;
     int deviceWidth,deviceHeight;
-    int randomX,randomY;
-    boolean egg;
+    Point position;
     Random random;
     Snake snake;
 
@@ -15,6 +17,7 @@ public class Egg{
         deviceWidth=gamedata.deviceWidth;
         deviceHeight=gamedata.deviceHeight;
         snakeSize=gamedata.snakeSize;
+        position = new Point(0,0);
         random=new Random();
     }
 
@@ -22,31 +25,28 @@ public class Egg{
         this.snake=snake;
     }
 
-    public boolean eatEgg(int x,int y) {
-        return x == eggX && y == eggY;
-    }
-
-    public void newEgg() {
-        do {
-            egg=false;
-            randomX=random.nextInt(deviceWidth/snakeSize);
-            randomY=random.nextInt(deviceHeight/snakeSize);
-            eggX=randomX*snakeSize;
-            eggY=randomY*snakeSize;
+    public boolean newEgg(boolean collision) {
+        do{
+            position = new Point(random.nextInt(deviceWidth/snakeSize)*snakeSize,
+                    random.nextInt(deviceHeight/snakeSize)*snakeSize);
             for(int i=0;i<snake.length;i++)
-                if (eggX == snake.snakeX.get(i) && eggY == snake.snakeY.get(i)) {
-                    egg = true;
+                if(position.equals(snake.head)){
+                    collision =true;
                     break;
                 }
-        }while(egg);
+            //implement head collision check with the egg here
+        }while(collision);
+        return true;
     }
 
-    boolean develop(int x,int y,boolean NEW) {
-        if(eatEgg(x, y)) {
-            if(NEW)
-                newEgg();
-            return true;
-        }
-        return false;
+    public void draw(Canvas canvas, Paint paint) {
+        canvas.drawRect(position.x, position.y,position.x + snake.size, position.y + snake.size, paint);
+    }
+
+    boolean collision(Point snakeHead) {
+        if(snakeHead.equals(position))
+            return newEgg(false);
+        else
+            return false;
     }
 }

@@ -1,30 +1,30 @@
 package com.vikrant.hungrysnake;
 
-import android.graphics.Canvas;
+import android.content.Context;
 
 public class GameThread extends Thread{
 
-    GamePanelActivity activity;
+    Context context;
     GamePanel gamePanel;
     long startTime,endTime,delayTime;
 
-    GameThread(GamePanelActivity activity) {
-        gamePanel=activity.gamePanel;
-        this.activity=activity;
+    GameThread(GamePanel gamePanel, Context context) {
+        this.gamePanel = gamePanel;
+        this.context = context;
     }
 
     @Override
     public void run() {
         while(gamePanel.snake.running) {
             if(gamePanel.pause) {
-                updateDisplay();
+                gamePanel.updateDisplay();
                 break;
             }
             startTime=System.currentTimeMillis();
-            gamePanel.snake.move(true);
+            gamePanel.onTimer();
             if(gamePanel.snake.collision())
                 break;
-            updateDisplay();
+            gamePanel.updateDisplay();
             endTime=System.currentTimeMillis();
             delayTime=endTime-startTime;
             try {
@@ -36,30 +36,6 @@ public class GameThread extends Thread{
             }
         }
         if(gamePanel.snake.running)
-            showAlertDialog();
-    }
-
-    void updateDisplay() {
-        activity.runOnUiThread(new Runnable() {
-            public void run() {
-                Canvas canvas = gamePanel.getHolder().lockCanvas();
-                if(canvas!=null) {
-                    gamePanel.draw(canvas);
-                    gamePanel.getHolder().unlockCanvasAndPost(canvas);
-                }
-            }
-        });
-    }
-
-    void showAlertDialog() {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(gamePanel.pause)
-                    gamePanel.pauseGame();
-                else
-                    gamePanel.exitGame();
-            }
-        });
+            gamePanel.showAlertDialog();
     }
 }
