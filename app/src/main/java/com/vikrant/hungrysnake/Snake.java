@@ -4,6 +4,7 @@ package com.vikrant.hungrysnake;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+
 import java.util.ArrayList;
 
 public class Snake{
@@ -11,11 +12,11 @@ public class Snake{
     int length,size;
     int headColor,bodyColor;
     int deviceWidth,deviceHeight;
-    boolean horizontal,forward,running;
-    boolean tempDirection;
+    boolean horizontal,forward;
     ArrayList<Point> tail;
     Point head;
     Egg egg;
+    String direction;
 
     Snake(GameData gameData,Egg egg) {
         this.egg=egg;
@@ -29,6 +30,7 @@ public class Snake{
         head = new Point(size,0);
         tail = new ArrayList<>();
         tail.add(new Point(0,0));
+        direction = "RIGHT";
         horizontal=true;
         forward=true;
     }
@@ -51,26 +53,33 @@ public class Snake{
     public void checkBoundsCollision() {
         if(head.x == deviceWidth)
             head.set(0, head.y);
-        else if(head.y == deviceHeight)
+        else if(head.y == deviceHeight - size)
             head.set(head.x, 0);
         else if(head.x == -size)
             head.set(deviceWidth - size, head.y);
         else if(head.y == -size)
-            head.set(head.x, deviceHeight-size);
+            head.set(head.x, deviceHeight-2*size);
     }
 
     public void move() {
         tail.add(0, new Point(head.x, head.y));
-        if(horizontal)
-            if(forward)
-                head.set(head.x + size, head.y);
-            else
-                head.set(head.x - size, head.y);
-        else
-            if(forward)
-                head.set(head.x , head.y+ size);
-            else
-                head.set(head.x , head.y- size);
+        switch(direction) {
+            case "RIGHT": head.set(head.x + size, head.y); break;
+            case "LEFT": head.set(head.x - size, head.y); break;
+            case "UP": head.set(head.x , head.y- size); break;
+            case "DOWN": head.set(head.x , head.y+ size); break;
+        }
+    }
+
+    public void changeDirection(String swipe) {
+        if(swipe.equals("RIGHT") ||swipe.equals("LEFT"))
+            if(horizontal)
+                return;
+        if(swipe.equals("UP") ||swipe.equals("DOWN"))
+            if(!horizontal)
+                return;
+        direction = swipe;
+        horizontal = !horizontal;
     }
 
     public boolean collision() {
@@ -79,17 +88,6 @@ public class Snake{
             if(tail.get(i).equals(head))
                 return  true;
         return false;
-
     }
 
-    public void changeDirection(float x, float y) {
-        tempDirection=horizontal;
-        horizontal=Math.abs(x)>Math.abs(y);
-        if(horizontal==tempDirection)
-            return;
-        if(horizontal)
-            forward= x > 0;
-        else
-            forward= y > 0;
-    }
 }

@@ -30,7 +30,14 @@ public class GamePanelActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        gamePanel.pause=true;
+        if(gamePanel.gamePaused)
+            finish();
+        else if(gamePanel.gameOver) {
+            gamePanel.saveHighScore();
+            finish();
+        }
+        else
+            gamePanel.gamePaused=true;
     }
 
     @Override
@@ -42,8 +49,7 @@ public class GamePanelActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        gamePanel.pause=true;
-        gamePanel.snake.running=false;
+        gamePanel.gamePaused=true;
     }
 
     public void setHandler() {

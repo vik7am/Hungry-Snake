@@ -9,6 +9,7 @@ public class Egg{
 
     int snakeSize;
     int deviceWidth,deviceHeight;
+    boolean collision;
     Point position;
     Random random;
     Snake snake;
@@ -25,17 +26,20 @@ public class Egg{
         this.snake=snake;
     }
 
-    public boolean newEgg(boolean collision) {
+    public boolean newEgg() {
         do{
+            collision = false;
             position = new Point(random.nextInt(deviceWidth/snakeSize)*snakeSize,
-                    random.nextInt(deviceHeight/snakeSize)*snakeSize);
+                    random.nextInt((deviceHeight-snakeSize)/snakeSize)*snakeSize);
             for(int i=0;i<snake.length;i++)
-                if(position.equals(snake.head)){
-                    collision =true;
+                if(position.equals(snake.tail.get(i))){
+                    collision = true;
                     break;
                 }
-            //implement head collision check with the egg here
+            if(position.equals(snake.head))
+                collision = true;
         }while(collision);
+        System.out.println("Egg "+position+"ss"+snakeSize);
         return true;
     }
 
@@ -45,7 +49,7 @@ public class Egg{
 
     boolean collision(Point snakeHead) {
         if(snakeHead.equals(position))
-            return newEgg(false);
+            return newEgg();
         else
             return false;
     }

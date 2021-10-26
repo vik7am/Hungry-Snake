@@ -1,41 +1,28 @@
 package com.vikrant.hungrysnake;
 
-import android.content.Context;
-
 public class GameThread extends Thread{
 
-    Context context;
     GamePanel gamePanel;
-    long startTime,endTime,delayTime;
+    long startTime,delayTime;
 
-    GameThread(GamePanel gamePanel, Context context) {
+    GameThread(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
-        this.context = context;
     }
 
     @Override
     public void run() {
-        while(gamePanel.snake.running) {
-            if(gamePanel.pause) {
+        while(!gamePanel.gameOver && !gamePanel.gamePaused) {
+            try{
+                startTime = System.currentTimeMillis();
+                gamePanel.updateState();
                 gamePanel.updateDisplay();
-                break;
-            }
-            startTime=System.currentTimeMillis();
-            gamePanel.onTimer();
-            if(gamePanel.snake.collision())
-                break;
-            gamePanel.updateDisplay();
-            endTime=System.currentTimeMillis();
-            delayTime=endTime-startTime;
-            try {
-                if(delayTime<gamePanel.sleepTime)
-                    Thread.sleep(gamePanel.sleepTime-delayTime);
+                delayTime = System.currentTimeMillis() -startTime;
+                Thread.sleep(gamePanel.sleepTime - delayTime);
             }
             catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        if(gamePanel.snake.running)
-            gamePanel.showAlertDialog();
+        gamePanel.updateDisplay();
     }
 }
