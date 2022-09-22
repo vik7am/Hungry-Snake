@@ -1,5 +1,5 @@
 
-# Co-Op Snake
+# Hungry Snake
 
 Hungry snake is a simple, clean and modern arcade snake game. The goal is to eat as many eggs as you can without hitting your head to your tail. The more eggs you eat, the longer your snake’s tail will become. You can easily control your snake by swiping in the direction you want it to move. Snake is one of the most popular arcade games for non-smartphones. Your snake has customization like its size, speed, color, and background.
 
